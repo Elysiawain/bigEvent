@@ -37,63 +37,66 @@ const rules = {
     <el-row class="login-page">
         <el-col :span="12" class="bg"></el-col>
         <el-col :span="6" :offset="3" class="form">
-            <!-- 注册展示 -->
-            <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-if="isRegister">
-                <el-form-item>
-                    <h1>注册</h1>
-                </el-form-item>
-                <el-form-item prop="username">
-                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="formModel.username"></el-input>
-                </el-form-item>
-                <el-form-item prop="password">
-                    <el-input :prefix-icon="Lock" type="password" placeholder="请输入密码"
-                        v-model="formModel.password"></el-input>
-                </el-form-item>
-                <el-form-item prop="repassword">
-                    <el-input :prefix-icon="Lock" type="password" placeholder="请输入再次密码"
-                        v-model="formModel.repassword"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="button" type="primary" auto-insert-space>
-                        注册
-                    </el-button>
-                </el-form-item>
-                <el-form-item class="flex">
-                    <el-link type="info" :underline="false" @click="isRegister = false">
-                        ← 返回
-                    </el-link>
-                </el-form-item>
-            </el-form>
+            <transition name="fade" mode="out-in">
+                <!-- 注册展示 -->
+                <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-if="isRegister">
+                    <el-form-item>
+                        <h1>注册</h1>
+                    </el-form-item>
+                    <el-form-item prop="username">
+                        <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="formModel.username"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input :prefix-icon="Lock" type="password" placeholder="请输入密码"
+                            v-model="formModel.password"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="repassword">
+                        <el-input :prefix-icon="Lock" type="password" placeholder="请输入再次密码"
+                            v-model="formModel.repassword"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button class="button" type="primary" auto-insert-space>
+                            注册
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item class="flex">
+                        <el-link type="info" :underline="false" @click="isRegister = false">
+                            ← 返回
+                        </el-link>
+                    </el-form-item>
+                </el-form>
 
 
 
-            <!-- 登录注册展示 -->
-            <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-else>
-                <el-form-item>
-                    <h1>登录</h1>
-                </el-form-item>
-                <el-form-item prop="username">
-                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="formModel.username"></el-input>
-                </el-form-item>
-                <el-form-item prop="password">
-                    <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码"
-                        v-model="formModel.password"></el-input>
-                </el-form-item>
-                <el-form-item class="flex">
-                    <div class="flex">
-                        <el-checkbox>记住我</el-checkbox>
-                        <el-link type="primary" :underline="false">忘记密码？</el-link>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                    <el-button class="button" type="primary" auto-insert-space>登录</el-button>
-                </el-form-item>
-                <el-form-item class="flex">
-                    <el-link type="info" :underline="false" @click="isRegister = true">
-                        注册 →
-                    </el-link>
-                </el-form-item>
-            </el-form>
+                <!-- 登录注册展示 -->
+                <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-else>
+                    <el-form-item>
+                        <h1>登录</h1>
+                    </el-form-item>
+                    <el-form-item prop="username">
+                        <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="formModel.username"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码"
+                            v-model="formModel.password"></el-input>
+                    </el-form-item>
+                    <el-form-item class="flex">
+                        <div class="flex">
+                            <el-checkbox>记住我</el-checkbox>
+                            <el-link type="primary" :underline="false">忘记密码？</el-link>
+                        </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button class="button" type="primary" auto-insert-space>登录</el-button>
+                    </el-form-item>
+                    <el-form-item class="flex">
+                        <el-link type="info" :underline="false" @click="isRegister = true">
+                            注册 →
+                        </el-link>
+                    </el-form-item>
+                </el-form>
+            </transition>
+
         </el-col>
     </el-row>
 </template>
@@ -115,8 +118,34 @@ const rules = {
         flex-direction: column;
         justify-content: center;
         user-select: none;
-
-
+        @keyframes fade-leave { // 设置离场动画
+            0% {transform: translateX(0);}
+            50% {transform: translateX(-100px);}
+            100% {transform: translateX(0px);}
+        }
+        @keyframes fade-enter {
+            0% {transform: translateX(100px);}
+            33% {transform: translateX(-100px);}
+            66% {transform: translateX(50px);}
+            100% {transform: translateX(0px);}
+        }
+        .fade-enter-from{
+            opacity: 0;
+        }
+        .fade-enter-to{ // 元素入场完毕时状态
+            opacity: 1;
+        }
+        .fade-enter-active{ // 元素入场时触发
+            animation: fade-enter 1s;
+            transition: opacity 2s;
+        }
+        .fade-leave-active{// 元素离场时触发
+            animation: fade-leave 1s reverse;
+            transition: opacity 1s;
+        }
+        .fade-leave-to{// 元素离场完毕时状态
+            opacity: 0;
+        }
 
         .title {
             margin: 0 auto;
