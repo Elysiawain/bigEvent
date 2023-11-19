@@ -1,7 +1,11 @@
 <script setup>
-import { User, Lock } from '@element-plus/icons-vue'
-import { ref } from 'vue'
-const isRegister = ref(true)
+import { User, Lock, Message } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue'
+import { userRegister, userLogin } from '@/api/user'
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
+const form = ref() //校验使用
+const isRegister = ref(false)
 // 添加注册的数据对象(绑定在:model="formModel"上)
 const formModel = ref({
     username: '',
@@ -31,6 +35,33 @@ const rules = {
             }, trigger: 'change'
         }]
 }
+// 当用户输入完所有的数据后校验用户输入是否合法
+const checkRegister = async () => {
+    await form.value.validate()// 校验数据
+    await userRegister(formModel.value)
+    ElMessage.success('注册成功')
+    isRegister.value = false
+}
+const userStore = useUserStore()
+const rotuer=useRouter()
+const checkLogin = async () => {
+    await form.value.validate()// 校验数据
+    const res = await userLogin(formModel.value)
+    // 存入token到store
+    userStore.setToken(res.data.token)
+    ElMessage.success('登录成功')
+    // 登录成功后跳转到首页
+    rotuer.push('/')
+}
+// 当切换注册和登录时清空表单数据
+watch(isRegister, () => {
+    formModel.value = {
+        username: '',
+        password: '',
+        repassword: ''
+    }
+})
+
 </script>
 
 <template>
@@ -55,7 +86,7 @@ const rules = {
                             v-model="formModel.repassword"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button class="button" type="primary" auto-insert-space>
+                        <el-button class="button" type="primary" auto-insert-space @click="checkRegister">
                             注册
                         </el-button>
                     </el-form-item>
@@ -87,7 +118,7 @@ const rules = {
                         </div>
                     </el-form-item>
                     <el-form-item>
-                        <el-button class="button" type="primary" auto-insert-space>登录</el-button>
+                        <el-button class="button" type="primary" auto-insert-space @click="checkLogin">登录</el-button>
                     </el-form-item>
                     <el-form-item class="flex">
                         <el-link type="info" :underline="false" @click="isRegister = true">
@@ -118,32 +149,64 @@ const rules = {
         flex-direction: column;
         justify-content: center;
         user-select: none;
-        @keyframes fade-leave { // 设置离场动画
-            0% {transform: translateX(0);}
-            50% {transform: translateX(-100px);}
-            100% {transform: translateX(0px);}
+
+        @keyframes fade-leave {
+
+            // 设置离场动画
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(-100px);
+            }
+
+            100% {
+                transform: translateX(0px);
+            }
         }
+
         @keyframes fade-enter {
-            0% {transform: translateX(100px);}
-            33% {transform: translateX(-100px);}
-            66% {transform: translateX(50px);}
-            100% {transform: translateX(0px);}
+            0% {
+                transform: translateX(100px);
+            }
+
+            33% {
+                transform: translateX(-100px);
+            }
+
+            66% {
+                transform: translateX(50px);
+            }
+
+            100% {
+                transform: translateX(0px);
+            }
         }
-        .fade-enter-from{
+
+        .fade-enter-from {
             opacity: 0;
         }
-        .fade-enter-to{ // 元素入场完毕时状态
+
+        .fade-enter-to {
+            // 元素入场完毕时状态
             opacity: 1;
         }
-        .fade-enter-active{ // 元素入场时触发
+
+        .fade-enter-active {
+            // 元素入场时触发
             animation: fade-enter 1s;
             transition: opacity 2s;
         }
-        .fade-leave-active{// 元素离场时触发
+
+        .fade-leave-active {
+            // 元素离场时触发
             animation: fade-leave 1s reverse;
             transition: opacity 1s;
         }
-        .fade-leave-to{// 元素离场完毕时状态
+
+        .fade-leave-to {
+            // 元素离场完毕时状态
             opacity: 0;
         }
 
