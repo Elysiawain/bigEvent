@@ -23,12 +23,19 @@ export const useUserStore = defineStore('user', () => {
     user.value = res.data.data
     localStorage.setItem('user', JSON.stringify(res.data.data))
   }
+  // 用户登出
+  const logout = () => {
+    removeToken() // 清除token
+    user.value = {} //清除userInfo
+    localStorage.removeItem('user')
+  }
   // 导出token和用户数据
   return {
     token,
     setToken,
     removeToken,
     getUser,
-    user
+    user,
+    logout
   }
 })

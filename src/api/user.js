@@ -12,4 +12,5 @@ export const userLogin = ({ username, password }) => {
 } // 解构写法
 
 // 获取用户的信息
+// 这里用户的登录信息在token里
 export const getUserInfo = () => {return request.get('/my/userinfo')}

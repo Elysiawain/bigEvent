@@ -11,11 +11,31 @@ import {
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useUserStore } from '@/stores/userStore'
-import { onMounted } from 'vue'
-const userStore = useUserStore()
+import { useRouter } from 'vue-router'
 
+const router = useRouter() // 添加路由对象
+const userStore = useUserStore()
 userStore.getUser()
 
+// 点击折叠菜单后的路由跳转
+const handleCommand = async (key) => {
+    if (key === 'logout') {
+        await ElMessageBox.confirm(
+            // 这里加一个异步，只有当用户选择确认推出后才会执行后续操作
+            '是否确认退出？',
+            '温馨提示',
+            {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }
+        )
+        userStore.logout()
+        router.push('/login')
+    } else {
+        router.push(`/user/${key}`)
+    }
+}
 
 </script>
 
@@ -71,10 +91,10 @@ userStore.getUser()
                 <div>管理员：
                     <strong>
                         <!-- 优先展示昵称，如果昵称不存再展示用户名 -->
-                        {{ userStore.user.nickname||userStore.user.username }}
+                        {{ userStore.user.nickname || userStore.user.username }}
                     </strong>
                 </div>
-                <el-dropdown placement="bottom-end">
+                <el-dropdown placement="bottom-end" @command="handleCommand">
                     <span class="el-dropdown__box">
                         <el-avatar :src="avatar" />
                         <el-icon>
