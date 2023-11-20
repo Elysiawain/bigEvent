@@ -1,15 +1,16 @@
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 const onSearch = () => { }
 const onReset = () => {
 
 }
+const showDrawer = ref(false)
 
 </script>
 <template>
     <page-container title="文章管理">
         <template #extra>
-            <el-button type="primary">发布文章</el-button>
+            <el-button type="primary" @click="showDrawer = true">发布文章</el-button>
         </template>
 
         <!-- 表单部分 -->
@@ -37,7 +38,16 @@ const onReset = () => {
                 <el-button @click="onReset">重置</el-button>
             </el-form-item>
         </el-form>
+        <el-table>
+            <template #empty>
+                <el-empty description="暂无文章" />
+            </template>
+        </el-table>
     </page-container>
+    <!-- 右侧抽屉 -->
+    <el-drawer v-model="showDrawer" title="添加文章" direction="rtl" size="50%">
+        Hi, there!
+    </el-drawer>
 </template>
     
 <style lang="scss" scoped></style>

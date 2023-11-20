@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/index.vue'),
-      redirect: 'article/manage', // 重定向路由
+      redirect: 'article/channel', // 重定向路由
       children: [
         {
           path: '/article/manage',
